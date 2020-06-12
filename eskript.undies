@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+__API=2
+
+function __puton__ {
+  datadir__=$HOME/.eskiript
+  mkdir -p $datadir__
+}
+
+function __filename {
+  echo ${datadir__}/$(date +%Y%m%d-%H%M%S).script
+}
+
+function start__ {
+  script --quiet --timing=$(__filename .timing).timing $(__filename)
+}
+
+function list__ {
+  echo '$ ' ${__app__} replay [number]
+  i=0
+  for file in $(ls ${datadir__}/*.script); do
+    (( i+=1 ))
+    printf -- '%d: %s\n' $i $(basename $file)
+  done
+}
+
+function replay__ {
+  local number=${1:-''}
+  local fullpath=''
+  until test ! -z $fullpath && test -f $fullpath; do
+    if test -z $number; then
+      list__
+      read -p 'Which number to replay?'$'\n'
+      number=$REPLY
+    fi
+    filename=$(list__ | grep ${number}: | cut -d' ' -f2)
+    fullpath=${datadir__}/${filename}
+    number=''
+  done
+  __exec scriptreplay --timing=${fullpath}.timing $fullpath
+}
+
+. undies
