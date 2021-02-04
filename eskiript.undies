@@ -8,11 +8,14 @@ function __puton__ {
 }
 
 function __filename {
-  echo ${datadir__}/$(date +%Y%m%d-%H%M%S).script
+  local title=$1 && shift
+  local ext=${1:-'.script'} && shift
+  printf -- '%s/%s--%s%s' ${datadir__} $(date +%Y%m%d-%H%M%S) $title $ext
 }
 
 function start__ {
-  script --quiet --timing=$(__filename .timing).timing $(__filename)
+  local title=${1:-'untitled'}
+  script --quiet --timing=$(__filename $title .timing) $(__filename $title)
 }
 
 function list__ {
@@ -37,7 +40,7 @@ function replay__ {
     fullpath=${datadir__}/${filename}
     number=''
   done
-  __exec scriptreplay --timing=${fullpath}.timing $fullpath
+  __exec scriptreplay --timing=${fullpath/script/timing} $fullpath
 }
 
 . undies
