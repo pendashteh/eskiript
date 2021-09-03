@@ -2,8 +2,10 @@
 
 __API=2
 
+ESKIRIPT_ROOT=${ESKIRIPT_ROOT:-$HOME}
+
 function __puton__ {
-  datadir__=$HOME/.eskiript
+  datadir__=${ESKIRIPT_ROOT}/.eskiript
   mkdir -p $datadir__
 }
 
