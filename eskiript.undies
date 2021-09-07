@@ -17,7 +17,7 @@ function __filename {
 
 function start__ {
   local title=${1:-'untitled'}
-  script --quiet --timing=$(__filename $title .timing) $(__filename $title)
+  __exec script --quiet --timing=$(__filename $title .timing) $(__filename $title)
 }
 
 function list__ {
