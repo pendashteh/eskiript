@@ -23,7 +23,7 @@ function start__ {
 function list__ {
   echo '$ ' ${__app__} replay [number]
   i=0
-  for file in $(ls ${datadir__}/*.script); do
+  for file in $(find ${datadir__} -name *.script -exec basename {} \;); do
     (( i+=1 ))
     printf -- '%d: %s\n' $i $(basename $file)
   done
@@ -43,6 +43,11 @@ function replay__ {
     number=''
   done
   __exec scriptreplay --timing=${fullpath/script/timing} $fullpath
+}
+
+here__help='Sets current directory as root. Usage: __app__ here [task]'
+function here__ {
+  ESKIRIPT_ROOT=$(pwd) $0 $@
 }
 
 . undies
