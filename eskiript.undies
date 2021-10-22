@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-__API=2
+__API__=3
 
-ESKIRIPT_ROOT=${ESKIRIPT_ROOT:-$HOME}
+__datadir=${__datadir:-$HOME/.eskiript}
 
 function __puton__ {
-  datadir__=${ESKIRIPT_ROOT}/.eskiript
-  mkdir -p $datadir__
+  mkdir -p $__datadir
 }
 
 function __filename {
   local title=$1 && shift
   local ext=${1:-'.script'} && shift
-  printf -- '%s/%s--%s%s' ${datadir__} $(date +%Y%m%d-%H%M%S) $title $ext
+  printf -- '%s/%s--%s%s' ${__datadir} $(date +%Y%m%d-%H%M%S) $title $ext
 }
 
 function start__ {
@@ -23,7 +22,7 @@ function start__ {
 function list__ {
   echo '$ ' ${__app__} replay [number]
   i=0
-  for file in $(find ${datadir__} -name *.script -exec basename {} \;); do
+  for file in $(find ${__datadir} -name *.script -exec basename {} \;); do
     (( i+=1 ))
     printf -- '%d: %s\n' $i $(basename $file)
   done
@@ -39,7 +38,7 @@ function replay__ {
       number=$REPLY
     fi
     filename=$(list__ | grep ${number}: | cut -d' ' -f2)
-    fullpath=${datadir__}/${filename}
+    fullpath=${__datadir}/${filename}
     number=''
   done
   __exec scriptreplay --timing=${fullpath/script/timing} $fullpath
@@ -47,7 +46,7 @@ function replay__ {
 
 here__help='Sets current directory as root. Usage: __app__ here [task]'
 function here__ {
-  ESKIRIPT_ROOT=$(pwd) $0 $@
+  __datadir=$(pwd)/.eskiript __run "$@"
 }
 
-. undies
+. undies3
