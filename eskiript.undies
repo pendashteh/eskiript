@@ -4,6 +4,8 @@ __API__=3
 
 __datadir=${__datadir:-$HOME/.eskiript}
 
+__divisor=${__divisor:-1}
+
 function __puton__ {
   mkdir -p $__datadir
 }
@@ -41,12 +43,18 @@ function replay__ {
     fullpath=${__datadir}/${filename}
     number=''
   done
-  __exec scriptreplay --timing=${fullpath/script/timing} $fullpath
+  __exec scriptreplay --divisor ${__divisor} --timing=${fullpath/script/timing} $fullpath
 }
 
 here__help='Sets current directory as root. Usage: __app__ here [task]'
 function here__ {
   __datadir=$(pwd)/.eskiript __run "$@"
+}
+
+speedup__ () {
+  __divisor=$1
+  shift
+  __run "$@"
 }
 
 . undies3
